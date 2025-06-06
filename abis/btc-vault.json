@@ -1,0 +1,880 @@
+[
+    {
+      "name": "BitcoinVault",
+      "type": "impl",
+      "interface_name": "caddy_finance_contracts::interface::bitcoin_vault_interface::IBitcoinVault"
+    },
+    {
+      "name": "core::integer::u256",
+      "type": "struct",
+      "members": [
+        {
+          "name": "low",
+          "type": "core::integer::u128"
+        },
+        {
+          "name": "high",
+          "type": "core::integer::u128"
+        }
+      ]
+    },
+    {
+      "name": "core::bool",
+      "type": "enum",
+      "variants": [
+        {
+          "name": "False",
+          "type": "()"
+        },
+        {
+          "name": "True",
+          "type": "()"
+        }
+      ]
+    },
+    {
+      "name": "caddy_finance_contracts::interface::bitcoin_vault_interface::IBitcoinVault",
+      "type": "interface",
+      "items": [
+        {
+          "name": "start_cycle",
+          "type": "function",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "end_cycle",
+          "type": "function",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "deposit_collateral",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "amount",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "request_withdrawal",
+          "type": "function",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "withdraw_collateral",
+          "type": "function",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "set_treasury",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "new_treasury",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "set_nostra_lp",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "new_lp",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "set_trader_wallet",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "new_trader",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "set_yield_pool",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "new_pool",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "upgrade",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "new_class_hash",
+              "type": "core::starknet::class_hash::ClassHash"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "pause",
+          "type": "function",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "unpause",
+          "type": "function",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "set_wbtc",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "wbtc_addr",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "set_usdc",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "usdc_addr",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "get_wbtc_address",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_usdc_address",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_nostra_lp_address",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_treasury_address",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_trader_wallet_address",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_current_cycle",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::integer::u64"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_cycle_duration",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::integer::u64"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "is_active_cycle",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::bool"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_yield_pool_address",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_user_collateral",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "user",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_user_deposit_time",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "user",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u64"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_cycle_total_collateral",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "cycle_id",
+              "type": "core::integer::u64"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_cycle_total_debt",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "cycle_id",
+              "type": "core::integer::u64"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_cycle_start_time",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "cycle_id",
+              "type": "core::integer::u64"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u64"
+            }
+          ],
+          "state_mutability": "view"
+        }
+      ]
+    },
+    {
+      "name": "OwnableMixinImpl",
+      "type": "impl",
+      "interface_name": "openzeppelin_access::ownable::interface::OwnableABI"
+    },
+    {
+      "name": "openzeppelin_access::ownable::interface::OwnableABI",
+      "type": "interface",
+      "items": [
+        {
+          "name": "owner",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "transfer_ownership",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "new_owner",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "renounce_ownership",
+          "type": "function",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "transferOwnership",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "newOwner",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "renounceOwnership",
+          "type": "function",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "external"
+        }
+      ]
+    },
+    {
+      "name": "PausableImpl",
+      "type": "impl",
+      "interface_name": "openzeppelin_security::interface::IPausable"
+    },
+    {
+      "name": "openzeppelin_security::interface::IPausable",
+      "type": "interface",
+      "items": [
+        {
+          "name": "is_paused",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::bool"
+            }
+          ],
+          "state_mutability": "view"
+        }
+      ]
+    },
+    {
+      "name": "constructor",
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "wbtc",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "usdc",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "nostra_lp",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "treasury",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "trader_wallet",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::CycleStarted",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        },
+        {
+          "kind": "data",
+          "name": "start_time",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::CycleEnded",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        },
+        {
+          "kind": "data",
+          "name": "total_yield",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "treasury_fee",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::Deposited",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "user",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::Borrowed",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "user",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::YieldDistributed",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "user",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::WithdrawalRequested",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "user",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::CollateralWithdrawn",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "user",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::TreasuryFeePaid",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::PlatformFeePaid",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::CollateralReturned",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "cycle_id",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::RolloverProcessed",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "user",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "new_cycle_id",
+          "type": "core::integer::u64"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "openzeppelin_security::pausable::PausableComponent::Paused",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "account",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "openzeppelin_security::pausable::PausableComponent::Unpaused",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "account",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ]
+    },
+    {
+      "kind": "enum",
+      "name": "openzeppelin_security::pausable::PausableComponent::Event",
+      "type": "event",
+      "variants": [
+        {
+          "kind": "nested",
+          "name": "Paused",
+          "type": "openzeppelin_security::pausable::PausableComponent::Paused"
+        },
+        {
+          "kind": "nested",
+          "name": "Unpaused",
+          "type": "openzeppelin_security::pausable::PausableComponent::Unpaused"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+      "type": "event",
+      "members": [
+        {
+          "kind": "key",
+          "name": "previous_owner",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "key",
+          "name": "new_owner",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+      "type": "event",
+      "members": [
+        {
+          "kind": "key",
+          "name": "previous_owner",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "key",
+          "name": "new_owner",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ]
+    },
+    {
+      "kind": "enum",
+      "name": "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+      "type": "event",
+      "variants": [
+        {
+          "kind": "nested",
+          "name": "OwnershipTransferred",
+          "type": "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred"
+        },
+        {
+          "kind": "nested",
+          "name": "OwnershipTransferStarted",
+          "type": "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "class_hash",
+          "type": "core::starknet::class_hash::ClassHash"
+        }
+      ]
+    },
+    {
+      "kind": "enum",
+      "name": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+      "type": "event",
+      "variants": [
+        {
+          "kind": "nested",
+          "name": "Upgraded",
+          "type": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded"
+        }
+      ]
+    },
+    {
+      "kind": "enum",
+      "name": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::Event",
+      "type": "event",
+      "variants": [
+        {
+          "kind": "nested",
+          "name": "CycleStarted",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::CycleStarted"
+        },
+        {
+          "kind": "nested",
+          "name": "CycleEnded",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::CycleEnded"
+        },
+        {
+          "kind": "nested",
+          "name": "Deposited",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::Deposited"
+        },
+        {
+          "kind": "nested",
+          "name": "Borrowed",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::Borrowed"
+        },
+        {
+          "kind": "nested",
+          "name": "YieldDistributed",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::YieldDistributed"
+        },
+        {
+          "kind": "nested",
+          "name": "WithdrawalRequested",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::WithdrawalRequested"
+        },
+        {
+          "kind": "nested",
+          "name": "CollateralWithdrawn",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::CollateralWithdrawn"
+        },
+        {
+          "kind": "nested",
+          "name": "TreasuryFeePaid",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::TreasuryFeePaid"
+        },
+        {
+          "kind": "nested",
+          "name": "PlatformFeePaid",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::PlatformFeePaid"
+        },
+        {
+          "kind": "nested",
+          "name": "CollateralReturned",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::CollateralReturned"
+        },
+        {
+          "kind": "nested",
+          "name": "RolloverProcessed",
+          "type": "caddy_finance_contracts::bitcoin_vault::BitcoinVault::RolloverProcessed"
+        },
+        {
+          "kind": "flat",
+          "name": "PausableEvent",
+          "type": "openzeppelin_security::pausable::PausableComponent::Event"
+        },
+        {
+          "kind": "flat",
+          "name": "OwnableEvent",
+          "type": "openzeppelin_access::ownable::ownable::OwnableComponent::Event"
+        },
+        {
+          "kind": "flat",
+          "name": "UpgradeableEvent",
+          "type": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event"
+        }
+      ]
+    }
+  ]

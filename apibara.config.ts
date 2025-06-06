@@ -4,7 +4,7 @@ export default defineConfig({
   runtimeConfig: {
     connectionString: process.env["POSTGRES_CONNECTION_STRING"] ?? "memory://",
     starknetVault: {
-      startingBlock: 0,
+      startingBlock: 808416,
       streamUrl: "https://sepolia.starknet.a5a.ch",
     },
   },
