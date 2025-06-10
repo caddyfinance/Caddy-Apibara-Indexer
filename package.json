@@ -13,18 +13,19 @@
     "drizzle:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "@apibara/indexer": "2.1.0-beta.38",
     "@apibara/plugin-drizzle": "2.1.0-beta.38",
-    "@apibara/protocol": "next",
-    "@apibara/starknet": "next",
-    "@electric-sql/pglite": "^0.2.17",
-    "apibara": "next",
-    "drizzle-orm": "^0.40.1",
-    "pg": "^8.16.0"
+    "@apibara/plugin-mongo": "2.1.0-beta.38",
+    "@apibara/protocol": "2.1.0-beta.38",
+    "@apibara/starknet": "2.1.0-beta.38",
+    "apibara": "2.1.0-beta.38",
+    "mongodb": "^6.17.0",
+    "pg": "^8.16.0",
+    "plugins": "link:@apibara/indexer/plugins"
   },
   "devDependencies": {
     "@types/node": "^20.5.2",
     "@types/pg": "^8.11.10",
-    "drizzle-kit": "^0.29.1",
     "typescript": "^5.6.2"
   }
 }

@@ -1,19 +1,15 @@
 // Caddy-Apibara-Indexer/indexers/starknet-vault.indexer.ts
 
-import { defineIndexer } from "apibara/indexer";
+import { defineIndexer } from "@apibara/indexer";
 import { useLogger } from "apibara/plugins";
-import { drizzleStorage } from "@apibara/plugin-drizzle";
-import { drizzle } from "@apibara/plugin-drizzle";
-import { getSelector, StarknetStream } from "@apibara/starknet";
+import { mongoStorage, useMongoStorage } from "@apibara/plugin-mongo";
+import { StarknetStream, getSelector } from "@apibara/starknet";
+import { MongoClient } from "mongodb";
 import type { ApibaraRuntimeConfig } from "apibara/types";
-import * as schema from "../lib/schema";
 
 export default function (runtimeConfig: ApibaraRuntimeConfig) {
-  console.log(runtimeConfig);
   const { startingBlock, streamUrl } = runtimeConfig["starknetVault"];
-  const db = drizzle({
-    schema,
-  });
+  const mongodb = new MongoClient(process.env["MONGODB_CONNECTION_STRING"] ?? "mongodb://localhost:27017/");
 
   return defineIndexer(StarknetStream)({
     streamUrl,
@@ -42,10 +38,15 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
       ],
     },
     plugins: [
-      drizzleStorage({ db, migrate: { migrationsFolder: "./drizzle" } }),
+      mongoStorage({
+        client: mongodb,
+        dbName: "starknetVault",
+        collections: ["deposits", "withdrawalRequests", "cycles"],
+      }),
     ],
     async transform({ endCursor, finality, block }) {
       const logger = useLogger();
+      const mongo = useMongoStorage();
 
       logger.info(
         "Transforming block | orderKey: ",
@@ -58,23 +59,23 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
       for (const event of events) {
         if (event.keys.includes(getSelector("Deposited"))) {
           console.log(event.data);
-          const { user, amount, cycle_id: cycleId } = event.data;
-          await db.insert(schema.depositsTable).values({
+          const [user, amount, cycleId] = event.data;
+          await mongo.collection("deposits").insertOne({
             user,
             amount,
             cycleId,
-            timestamp: BigInt(Date.now()), // Assuming you want to use the current timestamp
+            timestamp: new Date(),
           });
         } else if (event.keys.includes(getSelector("WithdrawalRequested"))) {
-          const { user, cycle_id: cycleId } = event.data;
-          await db.insert(schema.withdrawalRequestsTable).values({
+          const [user, cycleId] = event.data;
+          await mongo.collection("withdrawalRequests").insertOne({
             user,
             cycleId,
-            timestamp: BigInt(Date.now()), // Assuming you want to use the current timestamp
+            timestamp: new Date(),
           });
         } else if (event.keys.includes(getSelector("CycleStarted"))) {
-          const { cycle_id: cycleId, start_time: startTime } = event.data;
-          await db.insert(schema.cyclesTable).values({
+          const [cycleId, startTime] = event.data;
+          await mongo.collection("cycles").insertOne({
             cycleId,
             startTime,
             status: "started",
