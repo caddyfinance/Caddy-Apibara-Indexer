@@ -4,8 +4,9 @@ export default defineConfig({
   runtimeConfig: {
     connectionString: process.env["MONGODB_CONNECTION_STRING"] ?? "mongodb://localhost:27017/",
     starknetVault: {
-      startingBlock: 808416,
+      startingBlock: 847235,
       streamUrl: "https://sepolia.starknet.a5a.ch",
+      dbName: "test_starknetVault_v1",
     },
   },
 });

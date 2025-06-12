@@ -6,47 +6,62 @@ import { mongoStorage, useMongoStorage } from "@apibara/plugin-mongo";
 import { StarknetStream, getSelector } from "@apibara/starknet";
 import { MongoClient } from "mongodb";
 import type { ApibaraRuntimeConfig } from "apibara/types";
+import { VaultDatabase } from "../lib/mongo-service";
+import { EventHandlers } from "../lib/event-handler";
+
+const CONTRACT_ADDRESS = "0x03470e8102b445fa3563eb724b52d17fcc6543b3639388edab74cb50be48e292";
 
 export default function (runtimeConfig: ApibaraRuntimeConfig) {
-  const { startingBlock, streamUrl } = runtimeConfig["starknetVault"];
-  const mongodb = new MongoClient(process.env["MONGODB_CONNECTION_STRING"] ?? "mongodb://localhost:27017/");
+  const { streamUrl, startingBlock, dbName} = runtimeConfig["starknetVault"];
+  const { connectionString } = runtimeConfig;
+  const mongodb = new MongoClient(connectionString);
 
   return defineIndexer(StarknetStream)({
+    startingBlock: BigInt(startingBlock),
     streamUrl,
     finality: "accepted",
-    startingBlock: BigInt(startingBlock),
     filter: {
       events: [
         {
           id: 1,
-          address: "0x03578348b88501c60eff778f6f72b70d7291d490ba155f4285a8c0a8c7dd0897",
+          address: CONTRACT_ADDRESS,
           transactionStatus: "succeeded",
           keys: [getSelector("Deposited")]
         },
         {
           id: 2,
-          address: "0x03578348b88501c60eff778f6f72b70d7291d490ba155f4285a8c0a8c7dd0897",
+          address: CONTRACT_ADDRESS,
           transactionStatus: "succeeded",
           keys: [getSelector("WithdrawalRequested")]
         },
         {
           id: 3,
-          address: "0x03578348b88501c60eff778f6f72b70d7291d490ba155f4285a8c0a8c7dd0897",
+          address: CONTRACT_ADDRESS,
           transactionStatus: "succeeded",
           keys: [getSelector("CycleStarted")]
+        },
+        {
+          id: 4,
+          address: CONTRACT_ADDRESS,
+          transactionStatus: "succeeded",
+          keys: [getSelector("CycleEnded")]
         },
       ],
     },
     plugins: [
       mongoStorage({
         client: mongodb,
-        dbName: "starknetVault",
-        collections: ["deposits", "withdrawalRequests", "cycles"],
+        dbName: dbName,
+        collections: ["cycles", "users", "deposits", "withdrawalRequests"],
       }),
     ],
     async transform({ endCursor, finality, block }) {
       const logger = useLogger();
       const mongo = useMongoStorage();
+      
+      // Initialize typed database and handlers
+      const db = new VaultDatabase(mongodb.db(dbName));
+      const handlers = new EventHandlers(db);
 
       logger.info(
         "Transforming block | orderKey: ",
@@ -55,31 +70,50 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
         finality,
       );
 
-      const { events } = block;
-      for (const event of events) {
+      for (const event of block.events) {
+        const { data, transactionHash, address, transactionStatus } = event;
+        const blockNumber = block.header?.blockNumber;
+
         if (event.keys.includes(getSelector("Deposited"))) {
-          console.log(event.data);
-          const [user, amount, cycleId] = event.data;
-          await mongo.collection("deposits").insertOne({
+          const [user, amount, cycleId] = data;
+          await handlers.handleDeposit(
             user,
             amount,
             cycleId,
-            timestamp: new Date(),
-          });
+            transactionHash,
+            blockNumber,
+            address,
+            transactionStatus
+          );
+
         } else if (event.keys.includes(getSelector("WithdrawalRequested"))) {
-          const [user, cycleId] = event.data;
-          await mongo.collection("withdrawalRequests").insertOne({
+          const [user, cycleId] = data;
+          await handlers.handleWithdrawal(
             user,
             cycleId,
-            timestamp: new Date(),
-          });
+            transactionHash,
+            blockNumber,
+            address,
+            transactionStatus
+          );
+
         } else if (event.keys.includes(getSelector("CycleStarted"))) {
-          const [cycleId, startTime] = event.data;
-          await mongo.collection("cycles").insertOne({
+          const [cycleId, startTime] = data;
+          await handlers.handleCycleStart(
             cycleId,
             startTime,
-            status: "started",
-          });
+            transactionHash,
+            blockNumber
+          );
+
+        } else if (event.keys.includes(getSelector("CycleEnded"))) {
+          const [cycleId, endTime] = data;
+          await handlers.handleCycleEnd(
+            cycleId,
+            endTime,
+            transactionHash,
+            blockNumber
+          );
         }
       }
     },
