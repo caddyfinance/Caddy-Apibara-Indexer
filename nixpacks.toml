@@ -1,8 +1,11 @@
 [phases.setup]
-nixPkgs = ["curl", "bash", "jq", "coreutils", "wget", "unzip", "gzip"]
+nixPkgs = ["curl", "bash", "jq", "coreutils", "wget", "unzip", "gzip", "nodejs", "corepack"]
 
 [phases.install]
 cmds = [
+  "corepack enable",
+  "corepack prepare pnpm@latest --activate",
+  "pnpm install",
   "curl -sL https://install.apibara.com | bash",
   "find /root -name 'apibara' -type f 2>/dev/null || echo 'apibara not found'",
   "ls -la /root/.local/share/apibara/ || echo 'directory not found'"
@@ -13,9 +16,8 @@ PATH = "$HOME/.local/bin:$PATH"
 
 [phases.build]
 cmds = [
-  "export PATH=\"$HOME/.local/share/apibara/bin:$PATH\" && pnpm apibara prepare",
-  "export PATH=\"$HOME/.local/share/apibara/bin:$PATH\" && pnpm apibara build"
+  "pnpm run build"
 ]
 
 [start]
-cmd = "export PATH=\"$HOME/.local/share/apibara/bin:$PATH\" && pnpm apibara start" 
+cmd = "pnpm run start" 
