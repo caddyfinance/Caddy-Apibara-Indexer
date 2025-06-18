@@ -41,8 +41,8 @@ export interface UserDeposit {
   export interface RawEvent {
     user: string; // address from
     name: string  // event name
-    amount: string; // amount of the event
-    cycleId: string; // associated cycle id
+    amount?: string; // 
+    cycleId: string; // 
     hash: string; // transaction hash
     status: string; // transaction status
     address: string; // event address

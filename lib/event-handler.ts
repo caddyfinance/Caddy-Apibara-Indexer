@@ -4,6 +4,22 @@ import { UserDeposit, UserWithdrawal } from './starknet-types';
 export class EventHandlers {
   constructor(private db: VaultDatabase) {}
 
+  // Helper function to convert hex to decimal string
+  private hexToDecimal(hex: string): string {
+    if (hex.startsWith('0x')) {
+      return BigInt(hex).toString();
+    }
+    return hex;
+  }
+
+  // Helper function to convert hex timestamp to unix timestamp string
+  private hexToUnixTimestamp(hex: string): string {
+    if (hex.startsWith('0x')) {
+      return BigInt(hex).toString();
+    }
+    return hex;
+  }
+
   async handleDeposit(
     user: string,
     amount: string,
@@ -13,7 +29,10 @@ export class EventHandlers {
     eventAddress: string,
     transactionStatus: string
   ): Promise<void> {
-    console.log("Deposit event:", { user, amount, cycleId });
+    const readableCycleId = this.hexToDecimal(cycleId);
+    const readableAmount = this.hexToDecimal(amount);
+    
+    console.log("Deposit event:", { user, amount: readableAmount, cycleId: readableCycleId });
 
     const blockNumberStr = blockNumber?.toString() || '0';
 
@@ -21,8 +40,8 @@ export class EventHandlers {
     await this.db.saveDepositEvent({
       user,
       name: "Deposited",
-      amount,
-      cycleId,
+      amount: readableAmount,
+      cycleId: readableCycleId,
       hash: transactionHash,
       status: transactionStatus,
       address: eventAddress,
@@ -31,8 +50,8 @@ export class EventHandlers {
 
     // Update user collection
     const deposit: UserDeposit = {
-      amount,
-      cycleId,
+      amount: readableAmount,
+      cycleId: readableCycleId,
       transactionHash,
       blockNumber: blockNumberStr,
       timestamp: new Date()
@@ -49,7 +68,9 @@ export class EventHandlers {
     eventAddress: string,
     transactionStatus: string
   ): Promise<void> {
-    console.log("Withdrawal event:", { user, cycleId });
+    const readableCycleId = this.hexToDecimal(cycleId);
+    
+    console.log("Withdrawal event:", { user, cycleId: readableCycleId });
 
     const blockNumberStr = blockNumber?.toString() || '0';
 
@@ -57,7 +78,7 @@ export class EventHandlers {
     await this.db.saveWithdrawalEvent({
       user,
       name: "WithdrawalRequested",
-      cycleId,
+      cycleId: readableCycleId,
       hash: transactionHash,
       status: transactionStatus,
       address: eventAddress,
@@ -66,7 +87,7 @@ export class EventHandlers {
 
     // Update user collection
     const withdrawal: UserWithdrawal = {
-      cycleId,
+      cycleId: readableCycleId,
       transactionHash,
       blockNumber: blockNumberStr,
       timestamp: new Date()
@@ -81,11 +102,14 @@ export class EventHandlers {
     transactionHash: string,
     blockNumber: bigint | undefined
   ): Promise<void> {
-    console.log("Cycle started:", { cycleId, startTime });
+    const readableCycleId = this.hexToDecimal(cycleId);
+    const readableStartTime = this.hexToUnixTimestamp(startTime);
+    
+    console.log("Cycle started:", { cycleId: readableCycleId, startTime: readableStartTime });
 
     await this.db.startCycle(
-      cycleId,
-      startTime,
+      readableCycleId,
+      readableStartTime,
       transactionHash,
       blockNumber?.toString() || '0'
     );
@@ -97,11 +121,14 @@ export class EventHandlers {
     transactionHash: string,
     blockNumber: bigint | undefined
   ): Promise<void> {
-    console.log("Cycle ended:", { cycleId, endTime });
+    const readableCycleId = this.hexToDecimal(cycleId);
+    const readableEndTime = this.hexToUnixTimestamp(endTime);
+    
+    console.log("Cycle ended:", { cycleId: readableCycleId, endTime: readableEndTime });
 
     await this.db.endCycle(
-      cycleId,
-      endTime,
+      readableCycleId,
+      readableEndTime,
       transactionHash,
       blockNumber?.toString() || '0'
     );
