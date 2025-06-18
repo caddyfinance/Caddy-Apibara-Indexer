@@ -2,16 +2,20 @@
 nixPkgs = ["curl", "bash", "jq", "coreutils", "wget", "unzip", "gzip"]
 
 [phases.install]
-cmds = ["curl -sL https://install.apibara.com | bash"]
+cmds = [
+  "curl -sL https://install.apibara.com | bash",
+  "find /root -name 'apibara' -type f 2>/dev/null || echo 'apibara not found'",
+  "ls -la /root/.local/share/apibara/ || echo 'directory not found'"
+]
 
 [variables]
 PATH = "$HOME/.local/bin:$PATH"
 
 [phases.build]
 cmds = [
-  "export PATH=\"$HOME/.local/bin:$PATH\" && apibara prepare",
-  "export PATH=\"$HOME/.local/bin:$PATH\" && apibara build"
+  "export PATH=\"$HOME/.local/share/apibara/bin:$PATH\" && apibara prepare",
+  "export PATH=\"$HOME/.local/share/apibara/bin:$PATH\" && apibara build"
 ]
 
 [start]
-cmd = "export PATH=\"$HOME/.local/bin:$PATH\" && apibara start" 
+cmd = "export PATH=\"$HOME/.local/share/apibara/bin:$PATH\" && apibara start" 
