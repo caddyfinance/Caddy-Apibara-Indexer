@@ -3,7 +3,7 @@ nixPkgs = ["curl", "bash", "jq"]
 
 [phases.install]
 cmds = [
-  "npm ci",
+  "pnpm ci",
   "curl -sL https://install.apibara.com | bash"
 ]
 
