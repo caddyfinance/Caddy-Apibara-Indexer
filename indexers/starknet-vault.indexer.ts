@@ -9,7 +9,8 @@ import type { ApibaraRuntimeConfig } from "apibara/types";
 import { VaultDatabase } from "../lib/mongo-service";
 import { EventHandlers } from "../lib/event-handler";
 
-const CONTRACT_ADDRESS = "0x03470e8102b445fa3563eb724b52d17fcc6543b3639388edab74cb50be48e292";
+// const CONTRACT_ADDRESS = "0x03470e8102b445fa3563eb724b52d17fcc6543b3639388edab74cb50be48e292";
+const CONTRACT_ADDRESS = "0x4c35020ba26ea5be95b269aafa9bc29661acc54bdb5b7a4f84f5a028cbb53f0";
 
 export default function (runtimeConfig: ApibaraRuntimeConfig) {
   const { streamUrl, startingBlock, dbName} = runtimeConfig["starknetVault"];
