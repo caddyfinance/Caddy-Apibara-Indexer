@@ -17,8 +17,7 @@
     "@apibara/starknet": "2.1.0-beta.38",
     "apibara": "2.1.0-beta.38",
     "mongodb": "^6.17.0",
-    "pg": "^8.16.0",
-    "plugins": "link:@apibara/indexer/plugins"
+    "pg": "^8.16.0"
   },
   "devDependencies": {
     "@types/node": "^20.5.2",
