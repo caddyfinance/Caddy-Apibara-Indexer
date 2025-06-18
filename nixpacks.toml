@@ -9,9 +9,9 @@ PATH = "$HOME/.local/bin:$PATH"
 
 [phases.build]
 cmds = [
-  "source /root/.bashrc && apibara prepare",
-  "source /root/.bashrc && apibara build"
+  "export PATH=\"$HOME/.local/bin:$PATH\" && apibara prepare",
+  "export PATH=\"$HOME/.local/bin:$PATH\" && apibara build"
 ]
 
 [start]
-cmd = "source /root/.bashrc && apibara start" 
+cmd = "export PATH=\"$HOME/.local/bin:$PATH\" && apibara start" 
