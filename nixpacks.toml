@@ -1,0 +1,18 @@
+[phases.setup]
+nixPkgs = ["curl", "bash", "jq"]
+
+[phases.install]
+cmds = [
+  "npm ci",
+  "curl -sL https://install.apibara.com | bash"
+]
+
+[phases.build]
+cmds = [
+  "export PATH=\"$HOME/.local/bin:$PATH\"",
+  "apibara prepare",
+  "apibara build"
+]
+
+[start]
+cmd = "export PATH=\"$HOME/.local/bin:$PATH\" && apibara start" 
