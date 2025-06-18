@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["curl", "bash", "jq", "coreutils", "wget", "unzip"]
+nixPkgs = ["curl", "bash", "jq", "coreutils", "wget", "unzip", "gzip"]
 
 [phases.install]
 cmds = ["curl -sL https://install.apibara.com | bash"]
