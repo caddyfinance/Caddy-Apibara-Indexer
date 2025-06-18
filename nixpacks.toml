@@ -13,7 +13,7 @@ PATH = "$HOME/.local/bin:$PATH"
 
 [phases.build]
 cmds = [
-  "export PATH=\"$HOME/.local/share/apibara/bin:$PATH\" && apibara prepare",
+  # "export PATH=\"$HOME/.local/share/apibara/bin:$PATH\" && apibara prepare",
   "export PATH=\"$HOME/.local/share/apibara/bin:$PATH\" && apibara build"
 ]
 
