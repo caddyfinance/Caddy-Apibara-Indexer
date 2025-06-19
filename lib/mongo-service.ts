@@ -1,6 +1,6 @@
 // lib/mongodb.ts
 import { Collection, Db } from 'mongodb';
-import { User, Cycle, RawEvent, UserDeposit, UserWithdrawal } from './starknet-types';
+import { User, Cycle, RawEvent, UserDeposit, UserWithdrawal, UserYieldWithdrawal } from './starknet-types';
 
 export class VaultDatabase {
   constructor(private db: Db) {
@@ -14,6 +14,7 @@ export class VaultDatabase {
       // User collection indexes
       await this.users.createIndex({ address: 1 }, { unique: true });
       await this.users.createIndex({ lastActivity: -1 });
+      await this.users.createIndex({ totalYieldWithdrawn: -1 });
       
       // Cycle collection indexes
       await this.cycles.createIndex({ cycleId: 1 }, { unique: true });
@@ -31,6 +32,12 @@ export class VaultDatabase {
       await this.withdrawalRequests.createIndex({ cycleId: 1 });
       await this.withdrawalRequests.createIndex({ hash: 1 });
       await this.withdrawalRequests.createIndex({ timestamp: -1 });
+
+      // Yield withdrawals collection indexes
+      await this.yieldWithdrawals.createIndex({ user: 1 });
+      await this.yieldWithdrawals.createIndex({ cycleId: 1 });
+      await this.yieldWithdrawals.createIndex({ hash: 1 });
+      await this.yieldWithdrawals.createIndex({ timestamp: -1 });
       
       console.log('Database indexes created successfully');
     } catch (error) {
@@ -55,6 +62,15 @@ export class VaultDatabase {
     return this.db.collection<RawEvent>('withdrawalRequests');
   }
 
+  get yieldWithdrawals(): Collection<RawEvent> {
+    return this.db.collection<RawEvent>('yieldWithdrawals');
+  }
+
+  // Helper function to add two string numbers
+  private addStringNumbers(a: string, b: string): string {
+    return (BigInt(a) + BigInt(b)).toString();
+  }
+
   // User operations - Fixed to avoid conflict
   async addUserDeposit(userAddress: string, deposit: UserDeposit): Promise<void> {
     // First, try to find if user exists
@@ -75,6 +91,8 @@ export class VaultDatabase {
         address: userAddress,
         deposits: [deposit],
         withdrawalRequests: [],
+        yieldWithdrawals: [],
+        totalYieldWithdrawn: '0',
         createdAt: new Date(),
         lastActivity: new Date()
       });
@@ -100,6 +118,43 @@ export class VaultDatabase {
         address: userAddress,
         deposits: [],
         withdrawalRequests: [withdrawal],
+        yieldWithdrawals: [],
+        totalYieldWithdrawn: '0',
+        createdAt: new Date(),
+        lastActivity: new Date()
+      });
+    }
+  }
+
+  async addUserYieldWithdrawal(userAddress: string, yieldWithdrawal: UserYieldWithdrawal): Promise<void> {
+    // First, try to find if user exists
+    const existingUser = await this.users.findOne({ address: userAddress });
+    
+    if (existingUser) {
+      // User exists, add the yield withdrawal and update total
+      const newTotal = this.addStringNumbers(
+        existingUser.totalYieldWithdrawn || '0', 
+        yieldWithdrawal.amount
+      );
+      
+      await this.users.updateOne(
+        { address: userAddress },
+        {
+          $push: { yieldWithdrawals: yieldWithdrawal },
+          $set: { 
+            totalYieldWithdrawn: newTotal,
+            lastActivity: new Date() 
+          }
+        }
+      );
+    } else {
+      // User doesn't exist, create new user with the yield withdrawal
+      await this.users.insertOne({
+        address: userAddress,
+        deposits: [],
+        withdrawalRequests: [],
+        yieldWithdrawals: [yieldWithdrawal],
+        totalYieldWithdrawn: yieldWithdrawal.amount,
         createdAt: new Date(),
         lastActivity: new Date()
       });
@@ -153,5 +208,9 @@ export class VaultDatabase {
 
   async saveWithdrawalEvent(event: Omit<RawEvent, 'amount'>): Promise<void> {
     await this.withdrawalRequests.insertOne(event as RawEvent);
+  }
+
+  async saveYieldWithdrawalEvent(event: RawEvent): Promise<void> {
+    await this.yieldWithdrawals.insertOne(event);
   }
 }

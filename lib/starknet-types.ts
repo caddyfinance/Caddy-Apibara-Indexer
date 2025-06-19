@@ -13,12 +13,22 @@ export interface UserDeposit {
     blockNumber: string;
     timestamp: Date;
   }
+
+  export interface UserYieldWithdrawal {
+    amount: string;
+    cycleId: string;
+    transactionHash: string;
+    blockNumber: string;
+    timestamp: Date;
+  }
   
   export interface User {
     _id?: string;
     address: string;
     deposits: UserDeposit[];
     withdrawalRequests: UserWithdrawal[];
+    yieldWithdrawals: UserYieldWithdrawal[];
+    totalYieldWithdrawn: string;
     createdAt: Date;
     lastActivity: Date;
   }

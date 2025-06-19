@@ -1,5 +1,5 @@
 import { VaultDatabase } from './mongo-service';
-import { UserDeposit, UserWithdrawal } from './starknet-types';
+import { UserDeposit, UserWithdrawal, UserYieldWithdrawal } from './starknet-types';
 
 export class EventHandlers {
   constructor(private db: VaultDatabase) {}
@@ -94,6 +94,46 @@ export class EventHandlers {
     };
 
     await this.db.addUserWithdrawal(user, withdrawal);
+  }
+
+  async handleYieldWithdrawal(
+    user: string,
+    amount: string,
+    cycleId: string,
+    transactionHash: string,
+    blockNumber: bigint | undefined,
+    eventAddress: string,
+    transactionStatus: string
+  ): Promise<void> {
+    const readableCycleId = this.hexToDecimal(cycleId);
+    const readableAmount = this.hexToDecimal(amount);
+    
+    console.log("Yield withdrawal event:", { user, amount: readableAmount, cycleId: readableCycleId });
+
+    const blockNumberStr = blockNumber?.toString() || '0';
+
+    // Save raw event
+    await this.db.saveYieldWithdrawalEvent({
+      user,
+      name: "YieldWithdrawn",
+      amount: readableAmount,
+      cycleId: readableCycleId,
+      hash: transactionHash,
+      status: transactionStatus,
+      address: eventAddress,
+      timestamp: new Date(),
+    });
+
+    // Update user collection
+    const yieldWithdrawal: UserYieldWithdrawal = {
+      amount: readableAmount,
+      cycleId: readableCycleId,
+      transactionHash,
+      blockNumber: blockNumberStr,
+      timestamp: new Date()
+    };
+
+    await this.db.addUserYieldWithdrawal(user, yieldWithdrawal);
   }
 
   async handleCycleStart(

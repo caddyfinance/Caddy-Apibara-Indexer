@@ -47,13 +47,19 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
           transactionStatus: "succeeded",
           keys: [getSelector("CycleEnded")]
         },
+        {
+          id: 5,
+          address: CONTRACT_ADDRESS,
+          transactionStatus: "succeeded",
+          keys: [getSelector("YieldWithdrawn")]
+        },
       ],
     },
     plugins: [
       mongoStorage({
         client: mongodb,
         dbName: dbName,
-        collections: ["cycles", "users", "deposits", "withdrawalRequests"],
+        collections: ["cycles", "users", "deposits", "withdrawalRequests", "yieldWithdrawals"],
       }),
     ],
     async transform({ endCursor, finality, block }) {
@@ -91,6 +97,18 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
           const [user, cycleId] = data;
           await handlers.handleWithdrawal(
             user,
+            cycleId,
+            transactionHash,
+            blockNumber,
+            address,
+            transactionStatus
+          );
+
+        } else if (event.keys.includes(getSelector("YieldWithdrawn"))) {
+          const [user, amount, cycleId] = data;
+          await handlers.handleYieldWithdrawal(
+            user,
+            amount,
             cycleId,
             transactionHash,
             blockNumber,
