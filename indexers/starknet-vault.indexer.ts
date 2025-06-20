@@ -10,7 +10,7 @@ import { VaultDatabase } from "../lib/mongo-service";
 import { EventHandlers } from "../lib/event-handler";
 
 // const CONTRACT_ADDRESS = "0x03470e8102b445fa3563eb724b52d17fcc6543b3639388edab74cb50be48e292";
-const CONTRACT_ADDRESS = "0x04947bc976a7ff0839b2fa6c88381f751506435502e592951480c0cf394f28d9";
+const CONTRACT_ADDRESS = "0x031bffdb1f2eb613d8a737c56d4fa9bdde544faf0b3bc0fc435626573d196620";
 
 export default function (runtimeConfig: ApibaraRuntimeConfig) {
   const { streamUrl, startingBlock, dbName} = runtimeConfig["starknetVault"];
@@ -82,11 +82,11 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
         const blockNumber = block.header?.blockNumber;
 
         if (event.keys.includes(getSelector("Deposited"))) {
-          const [user, amount, cycleId] = data;
+          const [user, amount, unknown, cycle_id] = data;
           await handlers.handleDeposit(
             user,
             amount,
-            cycleId,
+            cycle_id,
             transactionHash,
             blockNumber,
             address,
@@ -94,10 +94,10 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
           );
 
         } else if (event.keys.includes(getSelector("WithdrawalRequested"))) {
-          const [user, cycleId] = data;
+          const [user, cycle_id] = data;
           await handlers.handleWithdrawal(
             user,
-            cycleId,
+            cycle_id,
             transactionHash,
             blockNumber,
             address,
@@ -105,11 +105,11 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
           );
 
         } else if (event.keys.includes(getSelector("YieldWithdrawn"))) {
-          const [user, amount, cycleId] = data;
+          const [user, amount, cycle_id] = data;
           await handlers.handleYieldWithdrawal(
             user,
             amount,
-            cycleId,
+            cycle_id,
             transactionHash,
             blockNumber,
             address,
@@ -117,19 +117,20 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
           );
 
         } else if (event.keys.includes(getSelector("CycleStarted"))) {
-          const [cycleId, startTime] = data;
+          const [cycle_id, start_time] = data;
           await handlers.handleCycleStart(
-            cycleId,
-            startTime,
+            cycle_id,
+            start_time,
             transactionHash,
             blockNumber
           );
 
         } else if (event.keys.includes(getSelector("CycleEnded"))) {
-          const [cycleId, endTime] = data;
+          const [cycle_id, total_yield, treasury_fee] = data;
           await handlers.handleCycleEnd(
-            cycleId,
-            endTime,
+            cycle_id,
+            total_yield,
+            treasury_fee,
             transactionHash,
             blockNumber
           );

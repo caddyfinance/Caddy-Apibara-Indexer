@@ -194,6 +194,18 @@
         "state_mutability": "external"
       },
       {
+        "name": "set_cycle_duration",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "new_duration",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
         "name": "get_wbtc_address",
         "type": "function",
         "inputs": [],
@@ -261,6 +273,17 @@
       },
       {
         "name": "get_cycle_duration",
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::integer::u64"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "get_cycle_time_remaining",
         "type": "function",
         "inputs": [],
         "outputs": [
@@ -372,6 +395,42 @@
         "outputs": [
           {
             "type": "core::integer::u64"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "get_user_yield_for_cycle",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "cycle_id",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "get_user_total_yield",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
           }
         ],
         "state_mutability": "view"

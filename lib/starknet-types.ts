@@ -46,6 +46,8 @@ export interface UserDeposit {
     startBlockNumber?: string;
     endBlockNumber?: string | null;
     createdAt: Date;
+    totalYield?: string;
+    treasuryFee?: string;
   }
   
   export interface RawEvent {

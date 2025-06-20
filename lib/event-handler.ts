@@ -157,18 +157,21 @@ export class EventHandlers {
 
   async handleCycleEnd(
     cycleId: string,
-    endTime: string,
+    total_yield: string,
+    treasury_fee: string,
     transactionHash: string,
     blockNumber: bigint | undefined
   ): Promise<void> {
     const readableCycleId = this.hexToDecimal(cycleId);
-    const readableEndTime = this.hexToUnixTimestamp(endTime);
+    const readableTotalYield = this.hexToDecimal(total_yield);
+    const readableTreasuryFee = this.hexToDecimal(treasury_fee);
     
-    console.log("Cycle ended:", { cycleId: readableCycleId, endTime: readableEndTime });
+    console.log("Cycle ended:", { cycleId: readableCycleId, total_yield: readableTotalYield, treasury_fee: readableTreasuryFee });
 
     await this.db.endCycle(
       readableCycleId,
-      readableEndTime,
+      readableTotalYield,
+      readableTreasuryFee,
       transactionHash,
       blockNumber?.toString() || '0'
     );

@@ -186,13 +186,14 @@ export class VaultDatabase {
     );
   }
 
-  async endCycle(cycleId: string, endTime: string, transactionHash: string, blockNumber: string): Promise<void> {
+  async endCycle(cycleId: string, total_yield: string, treasury_fee: string, transactionHash: string, blockNumber: string): Promise<void> {
     await this.cycles.updateOne(
       { cycleId },
       {
         $set: {
           status: 'ended' as const,
-          endTime,
+          totalYield: total_yield,
+          treasuryFee: treasury_fee,
           endedAt: new Date(),
           endTransactionHash: transactionHash,
           endBlockNumber: blockNumber
