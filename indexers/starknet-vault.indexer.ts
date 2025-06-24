@@ -16,7 +16,6 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
   const { streamUrl, startingBlock, dbName} = runtimeConfig["starknetVault"];
   const { connectionString } = runtimeConfig;
   const mongodb = new MongoClient(connectionString);
-  const db = new VaultDatabase(mongodb.db(dbName));
 
   return defineIndexer(StarknetStream)({
     startingBlock: BigInt(startingBlock),
@@ -65,6 +64,7 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
     ],
     async transform({ endCursor, finality, block }) {
       const logger = useLogger();
+      const db = new VaultDatabase(mongodb.db(dbName));
       const handlers = new EventHandlers(db);
 
       logger.info(
