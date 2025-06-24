@@ -10,12 +10,13 @@ import { VaultDatabase } from "../lib/mongo-service";
 import { EventHandlers } from "../lib/event-handler";
 
 // const CONTRACT_ADDRESS = "0x03470e8102b445fa3563eb724b52d17fcc6543b3639388edab74cb50be48e292";
-const CONTRACT_ADDRESS = "0x07704e6498e5b905fb171c30c08bbd98167bb8704df16f3a0c2df490e81bebb9";
+const CONTRACT_ADDRESS = "0x023e196de270a0eceb13758a1c53c0b2865547fb66e71c4baa161d116662fa43";
 
 export default function (runtimeConfig: ApibaraRuntimeConfig) {
   const { streamUrl, startingBlock, dbName} = runtimeConfig["starknetVault"];
   const { connectionString } = runtimeConfig;
   const mongodb = new MongoClient(connectionString);
+  const db = new VaultDatabase(mongodb.db(dbName));
 
   return defineIndexer(StarknetStream)({
     startingBlock: BigInt(startingBlock),
@@ -64,10 +65,6 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
     ],
     async transform({ endCursor, finality, block }) {
       const logger = useLogger();
-      const mongo = useMongoStorage();
-      
-      // Initialize typed database and handlers
-      const db = new VaultDatabase(mongodb.db(dbName));
       const handlers = new EventHandlers(db);
 
       logger.info(
