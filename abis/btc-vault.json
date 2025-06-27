@@ -332,6 +332,26 @@
         "state_mutability": "view"
       },
       {
+        "name": "get_user_cycle_collateral",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "cycle_id",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
         "name": "get_user_cycle_deposit_time",
         "type": "function",
         "inputs": [
