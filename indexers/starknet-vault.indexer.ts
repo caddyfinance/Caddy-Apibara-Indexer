@@ -42,13 +42,13 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
         },
         {
           id: 4,
-          address: CONTRACT_ADDRESS,
+          address: CONTRACT_ADDRESS as `0x${string}`,
           transactionStatus: "succeeded",
           keys: [getSelector("CycleEnded")]
         },
         {
           id: 5,
-          address: CONTRACT_ADDRESS,
+          address: CONTRACT_ADDRESS as `0x${string}`,
           transactionStatus: "succeeded",
           keys: [getSelector("YieldWithdrawn")]
         },
