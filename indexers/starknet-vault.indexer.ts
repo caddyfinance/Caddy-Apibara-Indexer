@@ -9,9 +9,8 @@ import type { ApibaraRuntimeConfig } from "apibara/types";
 import { VaultDatabase } from "../lib/mongo-service";
 import { EventHandlers } from "../lib/event-handler";
 
-// const CONTRACT_ADDRESS = "0x03470e8102b445fa3563eb724b52d17fcc6543b3639388edab74cb50be48e292";
-const CONTRACT_ADDRESS = "0x023e196de270a0eceb13758a1c53c0b2865547fb66e71c4baa161d116662fa43";
-
+// const CONTRACT_ADDRESS = process.env["CONTRACT_ADDRESS"] ?? "0x023e196de270a0eceb13758a1c53c0b2865547fb66e71c4baa161d116662fa43";
+const CONTRACT_ADDRESS = process.env["CONTRACT_ADDRESS"] ?? "0x07704e6498e5b905fb171c30c08bbd98167bb8704df16f3a0c2df490e81bebb9";
 export default function (runtimeConfig: ApibaraRuntimeConfig) {
   const { streamUrl, startingBlock, dbName} = runtimeConfig["starknetVault"];
   const { connectionString } = runtimeConfig;
@@ -25,35 +24,35 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
       events: [
         {
           id: 1,
-          address: CONTRACT_ADDRESS,
+          address: CONTRACT_ADDRESS as `0x${string}`,
           transactionStatus: "succeeded",
           keys: [getSelector("Deposited")]
         },
         {
           id: 2,
-          address: CONTRACT_ADDRESS,
+          address: CONTRACT_ADDRESS as `0x${string}`,
           transactionStatus: "succeeded",
           keys: [getSelector("WithdrawalRequested")]
         },
         {
           id: 3,
-          address: CONTRACT_ADDRESS,
+          address: CONTRACT_ADDRESS as `0x${string}`,
           transactionStatus: "succeeded",
           keys: [getSelector("CycleStarted")]
         },
         {
           id: 4,
-          address: CONTRACT_ADDRESS,
+          address: CONTRACT_ADDRESS as `0x${string}`,
           transactionStatus: "succeeded",
           keys: [getSelector("CycleEnded")]
         },
         {
           id: 5,
-          address: CONTRACT_ADDRESS,
+          address: CONTRACT_ADDRESS as `0x${string}`,
           transactionStatus: "succeeded",
           keys: [getSelector("YieldWithdrawn")]
         },
-      ],
+      ],   
     },
     plugins: [
       mongoStorage({
@@ -66,13 +65,16 @@ export default function (runtimeConfig: ApibaraRuntimeConfig) {
       const logger = useLogger();
       const db = new VaultDatabase(mongodb.db(dbName));
       const handlers = new EventHandlers(db);
-
+      logger.info("DB initialized");
       logger.info(
         "Transforming block | orderKey: ",
         endCursor?.orderKey,
         " | finality: ",
         finality,
+        " | events count: ",
+        block.events.length
       );
+
 
       for (const event of block.events) {
         const { data, transactionHash, address, transactionStatus } = event;
