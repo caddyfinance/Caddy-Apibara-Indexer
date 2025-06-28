@@ -10,7 +10,7 @@ import { VaultDatabase } from "../lib/mongo-service";
 import { EventHandlers } from "../lib/event-handler";
 
 // const CONTRACT_ADDRESS = process.env["CONTRACT_ADDRESS"] ?? "0x023e196de270a0eceb13758a1c53c0b2865547fb66e71c4baa161d116662fa43";
-const CONTRACT_ADDRESS = process.env["CONTRACT_ADDRESS"] ?? "0x076c565efbb4bfc68f8dd86121189baa645175de1c2d1fc3841fa255668bb9b3";
+const CONTRACT_ADDRESS = process.env["CONTRACT_ADDRESS"] ?? "0x015630e959b03b07442e4bf6d078d3915fac58866e003c8153f2c2caa2c1cfc2";
 export default function (runtimeConfig: ApibaraRuntimeConfig) {
   const { streamUrl, startingBlock, dbName} = runtimeConfig["starknetVault"];
   const { connectionString } = runtimeConfig;
